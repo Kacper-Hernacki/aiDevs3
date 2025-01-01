@@ -98,6 +98,7 @@
     "groq-sdk": "^0.7.0",
     "http-server": "^14.1.1",
     "js-yaml": "^4.1.0",
+    "langfuse": "^3.29.1",
     "libreoffice-convert": "^1.6.0",
     "lodash": "^4.17.21",
     "mammoth": "^1.8.0",
