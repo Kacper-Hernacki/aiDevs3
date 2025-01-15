@@ -1,0 +1,33 @@
+Osoby:
+1. Andrzej Maj - naukowiec specjalizujący się w sieciach neuronowych i uczeniu maszynowym, który był wykładowcą na Wydziale/Instytucie Informatyki i Matematyki Komputerowej w Krakowie około pół roku temu. Andrzej miał ambicje by zostać wykładowcą na renomowanej uczelni analitycznie nazywanej "królewską". Kanwa jego działalności i ambicji mogła być interpretowana jako pragnienie osiągnięcia prestiżu w nauce. Profil Andrzeja jest widoczny na LinkedIn.
+
+2. Monika - naukowiec, który naznaczył podobny obszar ekspertyzy jak Andrzej. Zna go osobiście, ale nie współpracowała z nim bezpośrednio.
+
+3. Adam - współpracował z pewnym Majem, prawdopodobnie jednak Arkadiuszem, nie Andrzejem. Arkadiusz był project managerem w biurze w Wałbrzychu, w budynku przy ulicy Stefana Batorego 68D.
+
+4. Michal - kojarzy go z dzieckości, pracowali razem i byli ze sobą w kontakcie telefonicznym. Zadowolony z osiągnięć Andrzeja.
+
+5. Rafał - współpracował z Andrzejem prawdopodobnie w badaniach nad podróżami w czasie. Wykonuje rozbieżne uwagi na temat potencjalnej zagrożenia, które Andrzej mógł stanowić.
+
+6. Ardian - obserwował działalność naukową Andrzeja Maj, nie miał z nim bezpośredniego kontaktu.
+
+7. Agnieszka - pracowała z Andrzejem Maj w Warszawie. Kiedy ukonczyła współpracę z nim, nie była pewna jego przyszłych planów.
+
+Miejsca:
+1. Kraków - Miejsce gdzie Adam pracował na Wydziale/Instytucie Informatyki i Matematyki Komputerowej.
+   
+2. Wałbrzych - Miejsce gdzie Adam znał gościa z nazwiskiem Maj (ale prawdopodobnie był to Arkadiusz Maj, nie Andrzej) gdzie adres biura brzmi: Stefana Batorego, 68D.
+
+3. Warszawa - Miejsce gdzie Agnieszka wspomina o współpracy z Andrzejem Maj.
+
+Zagrożenia: 
+1. Rafał sugeruje, że Andrzej może stanowić pewne zagrożenie, ale nie jest możliwe jednoznaczne określenie, o co dokładnie mu chodzi.
+2. Arkadiusz Maj jest negatywnie oceniany przez Adama i opisany jako podstępny i nie doceniający pracowników. Jednak ryzykowne zachowanie nie jest bezpośrednio związane z informacjami odnośnie do Andrzeja Maj.
+
+Chronologia Wydarzeń:
+1. Andrzej Maj pracował z Michalem na nieznanej uczelni.
+2. Andrzej zostaje wykładowcą na Wydziale/Instytucie Informatyki i Matematyki Komputerowej w Krakowie, gdzie pracował ok. pół roku temu.
+3. W nieokreślonym czasie, Andrzej pracował z Agnieszką w Warszawie.
+4. Na podstawie informacji z profilu LinkedIn Andrzej udaje się do niejasno zdefiniowanej "królewskiej uczelni".
+
+Powiązanie: Michal, Monika, Ardian, i Agnieszka wszystko miały pewien stopień profesjonalnej interakcji z Andrzejem, choć żaden nie miał z nim bezpośredniego stosunku. Rafał wspominano współpracę z Andrzejem, ale kontekst pozostaje niejasny.

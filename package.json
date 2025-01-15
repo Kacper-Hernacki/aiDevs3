@@ -35,6 +35,7 @@
     "segment": "bun run segment/crop.ts",
     "vision": "bun run vision/app.ts",
     "prompts": "bun run prompts/app.ts",
+    "solutions": "bun run solutions/app.ts",
     "summary": "bun run summary/app.ts",
     "audio": "bun run audio/app.ts",
     "audio-map-frontend": "bun run audio-map-frontend/app.ts",
