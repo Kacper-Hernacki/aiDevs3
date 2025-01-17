@@ -1,90 +1,56 @@
-import * as fs from "fs/promises";
-import * as path from "path";
-import { OpenAIService } from "../websearch/OpenAIService";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { promises as fs } from "fs";
+import path from "path";
+import { OpenAIService } from "../recognize/OpenAIService";
+import type {
+  ChatCompletionContentPartImage,
+  ChatCompletionMessageParam,
+} from "openai/resources/chat/completions";
 
-interface Transcription {
-  filename: string;
-  transcription: string;
-  timestamp: string;
-}
+const openaiService = new OpenAIService();
 
-async function createContext(): Promise<string> {
+async function processImage(): Promise<void> {
   try {
-    // Read all transcription files
-    const transcriptionsDir = path.join(
-      __dirname,
-      "../solutions/transcriptions"
+    // Read all map image files
+    const imageFiles = ["map-1.png", "map-2.png", "map-3.png", "map-4.png"];
+    const base64Images = await Promise.all(
+      imageFiles.map(async (file) => {
+        const imagePath = path.join(__dirname, `assets/${file}`);
+        const imageData = await fs.readFile(imagePath);
+        return imageData.toString("base64");
+      })
     );
-    const files = await fs.readdir(transcriptionsDir);
-    const jsonFiles = files.filter((file) => file.endsWith(".json"));
 
-    let allTranscriptions = "";
-
-    // Read and combine all transcriptions
-    for (const file of jsonFiles) {
-      const content = await fs.readFile(
-        path.join(transcriptionsDir, file),
-        "utf-8"
-      );
-      const transcription: Transcription = JSON.parse(content);
-      allTranscriptions += `\nTranskrypcja ${transcription.filename}:\n${transcription.transcription}\n`;
-    }
-
-    const openaiService = new OpenAIService();
-
-    const systemPrompt = `Jesteś ekspertem w analizie tekstu. Przeanalizuj poniższe transkrypcje i stwórz jeden spójny kontekst, który będzie zawierał:
-1. Szczegółowe informacje o wszystkich wspomnianych osobach
-2. Dokładne lokalizacje (adresy, nazwy ulic, instytucje)
-3. Powiązania między osobami i miejscami
-4. Chronologię wydarzeń
-5. Wszelkie potencjalne zagrożenia lub ostrzeżenia
-
-Skup się szczególnie na:
-- Dokładnych adresach i lokalizacjach
-- Pełnych nazwiskach osób
-- Konkretnych powiązaniach między ludźmi i miejscami
-- Szczegółach dotyczących instytucji i uczelni
-
-Format odpowiedzi powinien być przejrzysty i łatwy do przeszukiwania.`;
-
-    const messages: ChatCompletionMessageParam[] = [
+    // Prepare messages with multiple images
+    const allMessages: ChatCompletionMessageParam[] = [
       {
         role: "system",
-        content: systemPrompt,
+        content: `The attached images are screenshots of some city. There are 4 fragments, Name that city in polish. Double check if city you're going to give me as answer has locations presented in the map fragments. One of the fragments is from another city. Eliminate Kraków, Białystok, Poznań, Gdańsk, Łódź, warszawa, grudziądz and Wrocław from consideration.`,
       },
       {
         role: "user",
-        content: allTranscriptions,
+        content: base64Images.map((base64Image) => ({
+          type: "image_url",
+          image_url: {
+            url: `data:image/png;base64,${base64Image}`,
+            detail: "high",
+          },
+        })) as ChatCompletionContentPartImage[],
       },
     ];
 
-    const completion = await openaiService.completion(messages, "gpt-4", false);
-
-    if ("choices" in completion && completion.choices[0].message.content) {
-      const context = completion.choices[0].message.content;
-
-      // Save the context to a file
-      const outputPath = path.join(__dirname, "../solutions/context.txt");
-      await fs.writeFile(outputPath, context, "utf-8");
-
-      return context;
-    } else {
-      throw new Error("Failed to generate context");
-    }
+    // Get completion from GPT-4V
+    const completion = await openaiService.completion(
+      allMessages,
+      "gpt-4o",
+      false
+    );
+    // @ts-ignore
+    const answer = completion.choices[0].message.content;
+    console.log("Answer:", answer);
   } catch (error) {
-    console.error("Error creating context:", error);
-    throw error;
+    console.error("Error:", error);
   }
 }
 
 // Execute the function
-createContext()
-  .then((context) => {
-    console.log("Context created successfully:");
-    console.log(context);
-  })
-  .catch((error) => console.error("Error:", error));
-
-// Export the function for use in endpoints
-export { createContext };
+processImage();
