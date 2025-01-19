@@ -1,0 +1,20 @@
+{
+  "persons": [
+    "Barbara Zawadzka",
+    "Aleksander Ragowski",
+    "Andrzej Maj",
+    "Rafał Bomba",
+    "Adam",
+    "Gabriel",
+    "Azazel"
+  ],
+  "cities": [
+    "Kraków",
+    "Warszawa",
+    "Grudziadz",
+    "Lublin",
+    "Ciechocinek",
+    "Frombork",
+    "Elblag"
+  ]
+}
