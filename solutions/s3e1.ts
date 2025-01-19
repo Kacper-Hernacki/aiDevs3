@@ -218,6 +218,7 @@ export class TextProcessor {
 
       return metadata;
     } catch (error) {
+      // @ts-ignore
       console.error("Error:", error.message);
       throw error;
     }
