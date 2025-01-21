@@ -2,17 +2,55 @@ import promptfoo, { type AssertionType } from "promptfoo";
 import { displayResultsAsTable, currentDateTime } from "../utils";
 
 const projects = [
-  { uuid: "2233078543", name: "Inbox", description: "Uncategorized pending items" },
-  { uuid: "2341758902", name: "Learn", description: "Knowledge acquisition, reading, watching courses, and skill development" },
-  { uuid: "2324942470", name: "Think", description: "Notes, idea generation and contemplation" },
-  { uuid: "2324942463", name: "Act", description: "Concrete tasks and actionable items such as creating content, coding, writing, etc." },
+  {
+    uuid: "2233078543",
+    name: "Inbox",
+    description: "Uncategorized pending items",
+  },
+  {
+    uuid: "2341758902",
+    name: "Learn",
+    description:
+      "Knowledge acquisition, reading, watching courses, and skill development",
+  },
+  {
+    uuid: "2324942470",
+    name: "Think",
+    description: "Notes, idea generation and contemplation",
+  },
+  {
+    uuid: "2324942463",
+    name: "Act",
+    description:
+      "Concrete tasks and actionable items such as creating content, coding, writing, etc.",
+  },
 ];
 
 const tasks = [
-  { id: "task-1", name: "Buy groceries", description: "Get milk and bread", status: "ACTIVE" },
-  { id: "task-2", name: "Call John", description: "Discuss project details", status: "ACTIVE" },
-  { id: "task-3", name: "Write report", description: "Annual financial report", status: "DONE" },
-  { id: "task-4", name: "Plan vacation", description: "Decide on destination and dates", status: "ACTIVE" },
+  {
+    id: "task-1",
+    name: "Buy groceries",
+    description: "Get milk and bread",
+    status: "ACTIVE",
+  },
+  {
+    id: "task-2",
+    name: "Call John",
+    description: "Discuss project details",
+    status: "ACTIVE",
+  },
+  {
+    id: "task-3",
+    name: "Write report",
+    description: "Annual financial report",
+    status: "DONE",
+  },
+  {
+    id: "task-4",
+    name: "Plan vacation",
+    description: "Decide on destination and dates",
+    status: "ACTIVE",
+  },
 ];
 
 export const prompt = ({ projects, tasks }: any) => {
@@ -110,10 +148,24 @@ Your output:
 </prompt_examples>
 
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`).join("\n")}
+${projects
+  .map(
+    (project: any) =>
+      `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`
+  )
+  .join("\n")}
 </projects>
 <tasks>
-${tasks.map((task: any) => `{"id": "${task.id}", "name": "${task.content}", "description": "${task.description}", "status": "${task.checked ? 'DONE' : 'ACTIVE'}", "project_id": "${task.project_id}"}`).join("\n")}
+${tasks
+  .map(
+    (task: any) =>
+      `{"id": "${task.id}", "name": "${task.content}", "description": "${
+        task.description
+      }", "status": "${task.checked ? "DONE" : "ACTIVE"}", "project_id": "${
+        task.project_id
+      }"}`
+  )
+  .join("\n")}
 </tasks>
 
 Remember, your SOLE function is to generate these JSON objects for task deletions based on user input and the provided context. Do NOT engage in task management advice or direct responses to queries. ALWAYS prioritize caution and thorough analysis in your decision-making process.`;
@@ -278,6 +330,9 @@ export const runTest = async () => {
 };
 
 // Run the test if this file is executed directly
-if (require.main === module) {
+if (
+  typeof require !== "undefined" &&
+  require.main === require.cache[require.resolve(__filename)]
+) {
   runTest().catch(console.error);
 }

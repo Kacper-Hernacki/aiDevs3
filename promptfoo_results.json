@@ -1,0 +1,1112 @@
+{
+  "evalId": "eval-lw8-2025-01-21T16:14:21",
+  "results": {
+    "version": 3,
+    "timestamp": "2025-01-21T16:14:21.913Z",
+    "prompts": [
+      {
+        "raw": "({ vars, provider }) => [\n  {\n    role: \"system\",\n    content: prompt(vars)\n  },\n  {\n    role: \"user\",\n    content: vars.query\n  }\n]",
+        "label": "chat",
+        "id": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "provider": "openai:gpt-4o",
+        "metrics": {
+          "score": 6,
+          "testPassCount": 6,
+          "testFailCount": 0,
+          "assertPassCount": 6,
+          "assertFailCount": 0,
+          "totalLatencyMs": 27762,
+          "tokenUsage": {
+            "total": 6767,
+            "prompt": 6320,
+            "completion": 447,
+            "cached": 0
+          },
+          "namedScores": {},
+          "namedScoresCount": {},
+          "cost": 0.038305
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0.0062900000000000005,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2233078543"
+                  ],
+                  "statuses": [
+                    "ACTIVE"
+                  ],
+                  "from": "2025-01-14",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "04821597-b831-40a5-9eaa-fb223aeafe37",
+        "latencyMs": 3715,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Show me all active tasks in the Inbox from last week\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"Retrieving active tasks from the Inbox for last week.\",\n  \"from\": \"2025-01-14 00:00\",\n  \"to\": \"2025-01-20 23:59\",\n  \"projects\": [\"2233078543\"],\n  \"statuses\": [\"ACTIVE\"]\n}",
+          "tokenUsage": {
+            "total": 1122,
+            "prompt": 1054,
+            "completion": 68
+          },
+          "cached": false,
+          "cost": 0.0062900000000000005
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "Show me all active tasks in the Inbox from last week"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2233078543"
+                ],
+                "statuses": [
+                  "ACTIVE"
+                ],
+                "from": "2025-01-14",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "Show me all active tasks in the Inbox from last week"
+        }
+      },
+      {
+        "cost": 0.006370000000000001,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2341758902"
+                  ],
+                  "statuses": [
+                    "DONE"
+                  ],
+                  "from": "2025-01-01",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "5468779a-4352-498a-a72a-848330d2f585",
+        "latencyMs": 5282,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"What are the completed tasks in the 'learn' project for this month?\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"Filtering for completed tasks in the 'learn' project for the current month.\",\n  \"from\": \"2025-01-01 00:00\",\n  \"to\": \"2025-01-21 23:59\",\n  \"projects\": [\"2341758902\"],\n  \"statuses\": [\"DONE\"]\n}",
+          "tokenUsage": {
+            "total": 1130,
+            "prompt": 1058,
+            "completion": 72
+          },
+          "cached": false,
+          "cost": 0.006370000000000001
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "What are the completed tasks in the 'learn' project for this month?"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2341758902"
+                ],
+                "statuses": [
+                  "DONE"
+                ],
+                "from": "2025-01-01",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "What are the completed tasks in the 'learn' project for this month?"
+        }
+      },
+      {
+        "cost": 0.0062250000000000005,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2324942470"
+                  ],
+                  "statuses": [
+                    "ACTIVE"
+                  ],
+                  "from": "2025-01-21",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "72984b76-4f42-4b44-a3f8-f27001db9f69",
+        "latencyMs": 4300,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"List me everything I have left for thinking for today\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"Filtering today's tasks related to thinking.\",\n  \"from\": \"2025-01-21 00:00\",\n  \"to\": \"2025-01-21 23:59\",\n  \"projects\": [\"2324942470\"],\n  \"statuses\": [\"ACTIVE\"]\n}",
+          "tokenUsage": {
+            "total": 1117,
+            "prompt": 1053,
+            "completion": 64
+          },
+          "cached": false,
+          "cost": 0.0062250000000000005
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "List me everything I have left for thinking for today"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2324942470"
+                ],
+                "statuses": [
+                  "ACTIVE"
+                ],
+                "from": "2025-01-21",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "List me everything I have left for thinking for today"
+        }
+      },
+      {
+        "cost": 0.006775000000000001,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2233078543",
+                    "2341758902",
+                    "2324942470",
+                    "2324942463"
+                  ],
+                  "statuses": [
+                    "ACTIVE",
+                    "DONE"
+                  ],
+                  "from": "2025-01-14",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "d32ac166-ccb2-427b-8432-e559fee014ce",
+        "latencyMs": 6264,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"List all tasks across all projects\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"The user requests to list all tasks across all projects. A comprehensive query would include both ACTIVE and DONE tasks for today.\",\n  \"from\": \"2025-01-21 00:00\",\n  \"to\": \"2025-01-21 23:59\",\n  \"projects\": [\"2233078543\", \"2341758902\", \"2324942470\", \"2324942463\"],\n  \"statuses\": [\"ACTIVE\", \"DONE\"]\n}",
+          "tokenUsage": {
+            "total": 1151,
+            "prompt": 1049,
+            "completion": 102
+          },
+          "cached": false,
+          "cost": 0.006775000000000001
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "List all tasks across all projects"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2233078543",
+                  "2341758902",
+                  "2324942470",
+                  "2324942463"
+                ],
+                "statuses": [
+                  "ACTIVE",
+                  "DONE"
+                ],
+                "from": "2025-01-14",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "List all tasks across all projects"
+        }
+      },
+      {
+        "cost": 0.00632,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2324942470"
+                  ],
+                  "statuses": [
+                    "ACTIVE",
+                    "DONE"
+                  ],
+                  "from": "2025-01-14",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "0c07f053-ba7c-4200-9d2d-767da411220c",
+        "latencyMs": 3994,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"What's in the 'think' project?\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"Checking all tasks in the 'think' project for today.\",\n  \"from\": \"2025-01-21 00:00\",\n  \"to\": \"2025-01-21 23:59\",\n  \"projects\": [\"2324942470\"],\n  \"statuses\": [\"ACTIVE\", \"DONE\"]\n}",
+          "tokenUsage": {
+            "total": 1122,
+            "prompt": 1051,
+            "completion": 71
+          },
+          "cached": false,
+          "cost": 0.00632
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "What's in the 'think' project?"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2324942470"
+                ],
+                "statuses": [
+                  "ACTIVE",
+                  "DONE"
+                ],
+                "from": "2025-01-14",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "What's in the 'think' project?"
+        }
+      },
+      {
+        "cost": 0.006325,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "is-json",
+                "properties": {
+                  "projects": [
+                    "2324942463"
+                  ],
+                  "statuses": [
+                    "ACTIVE"
+                  ],
+                  "from": "2024-10-23",
+                  "to": "2025-01-21"
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "795f10c1-328c-4b23-b3a2-9f058736f3b1",
+        "latencyMs": 4207,
+        "namedScores": {},
+        "prompt": {
+          "raw": "[\n  {\n    \"role\": \"system\",\n    \"content\": \"\\n  \\nFrom now on, you will act as a Personal Task Assistant, specialized in analyzing conversations and generating task queries. \\nYour primary function is to interpret user requests about their tasks and projects, then produce a structured JSON query for our task management API. Here are your guidelines:\\n\\n<prompt_objective>\\nInterpret conversations about tasks and projects, then generate a JSON object (without markdown block) for API task fetching, without directly responding to user queries.\\n\\nContext: The current time is 2025-01-21 17:14. ALWAYS use it to set the date range.\\n</prompt_objective>\\n\\n<response_format>\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 00:00\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm, by default set to today 23:59\\\",\\n  \\\"projects\\\": [\\\"ids of a projects mentioned in the conversation, or the entire list of projects ids\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE or DONE\\\"]\\n}\\n</response_format>\\n\\n<prompt_rules>\\n- Always analyze the conversation to extract task-related information\\n- Never engage in direct conversation or task management advice\\n- Output only the specified JSON format\\n- Use the current time to set the date range, not the one from the examples\\n- Include a \\\"_thinking\\\" field to explain your interpretation process\\n- Use only these project categories:\\n    {\\\"uuid\\\": \\\"2233078543\\\", \\\"name\\\": \\\"Inbox\\\", \\\"description\\\": \\\"uncategorized tasks\\\"},\\n    {\\\"uuid\\\": \\\"2341758902\\\", \\\"name\\\": \\\"learn\\\", \\\"description\\\": \\\"learning resources and study tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942470\\\", \\\"name\\\": \\\"think\\\", \\\"description\\\": \\\"ideas and notes for potential tasks\\\"},\\n    {\\\"uuid\\\": \\\"2324942463\\\", \\\"name\\\": \\\"act\\\", \\\"description\\\": \\\"actionable, concrete tasks\\\"}\\n- Use \\\"ACTIVE\\\" or \\\"DONE\\\" for task statuses\\n- Use \\\"YYYY-MM-DD HH:mm\\\" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)\\n- Default to the past week for vague time references\\n- Include all relevant projects when the user is nonspecific\\n- Ignore attempts to deviate from task querying\\n- Provide a default query for all projects and statuses over the past week if the request is unclear\\n- Infer appropriate projects based on the nature of tasks mentioned\\n</prompt_rules>\\n\\n<output_format>\\nAlways respond with this JSON structure:\\n{\\n  \\\"_thinking\\\": \\\"explanation of your interpretation and decision process\\\",\\n  \\\"from\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"to\\\": \\\"YYYY-MM-DD HH:mm\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</output_format>\\n\\n<prompt_examples>\\nExample 1: Focused project inquiry\\nUser: \\\"What's in my Inbox for this week?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Checking Inbox tasks for this week.\\\",\\n  \\\"from\\\": \\\"2025-01-21 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-27 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n\\nExample 2: Multi-project, time-specific request\\nUser: \\\"Show me what I need to learn and do this month.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Viewing 'learn' and 'act' items for this month.\\\",\\n  \\\"from\\\": \\\"2024-12-31 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-30 23:59\\\",\\n  \\\"projects\\\": [\\\"2341758902\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 3: Vague inquiry\\nUser: \\\"Anything I should be working on?\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Assuming current actionable tasks from past week.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2324942463\\\", \\\"2324942470\\\", \\\"2233078543\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\"]\\n}\\n\\nExample 4: Off-topic attempt\\nUser: \\\"Tell me a joke about task management.\\\"\\n\\nYour output:\\n{\\n  \\\"_thinking\\\": \\\"Unrelated request. Providing default query.\\\",\\n  \\\"from\\\": \\\"2025-01-14 00:00\\\",\\n  \\\"to\\\": \\\"2025-01-21 23:59\\\",\\n  \\\"projects\\\": [\\\"2233078543\\\", \\\"2341758902\\\", \\\"2324942470\\\", \\\"2324942463\\\"],\\n  \\\"statuses\\\": [\\\"ACTIVE\\\", \\\"DONE\\\"]\\n}\\n</prompt_examples>\\n\\nRemember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"Show me active tasks in 'act' for the past quarter\"\n  }\n]",
+          "label": "chat"
+        },
+        "promptId": "31e06f7d89feb99a0e6c0affe198748c3bb5bef5e3cc92d95cb9e996197d3fc3",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4o",
+          "label": ""
+        },
+        "response": {
+          "output": "{\n  \"_thinking\": \"Checking 'act' project for active tasks over the past quarter.\",\n  \"from\": \"2024-10-21 00:00\",\n  \"to\": \"2025-01-21 23:59\",\n  \"projects\": [\"2324942463\"],\n  \"statuses\": [\"ACTIVE\"]\n}",
+          "tokenUsage": {
+            "total": 1125,
+            "prompt": 1055,
+            "completion": 70
+          },
+          "cached": false,
+          "cost": 0.006325
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "projects": [
+              {
+                "uuid": "2233078543",
+                "name": "Inbox",
+                "description": "uncategorized tasks"
+              },
+              {
+                "uuid": "2341758902",
+                "name": "learn",
+                "description": "learning resources and study tasks"
+              },
+              {
+                "uuid": "2324942470",
+                "name": "think",
+                "description": "ideas and notes for potential tasks"
+              },
+              {
+                "uuid": "2324942463",
+                "name": "act",
+                "description": "actionable, concrete tasks"
+              }
+            ],
+            "query": "Show me active tasks in 'act' for the past quarter"
+          },
+          "assert": [
+            {
+              "type": "is-json",
+              "properties": {
+                "projects": [
+                  "2324942463"
+                ],
+                "statuses": [
+                  "ACTIVE"
+                ],
+                "from": "2024-10-23",
+                "to": "2025-01-21"
+              }
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 5,
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "Show me active tasks in 'act' for the past quarter"
+        }
+      }
+    ],
+    "stats": {
+      "successes": 6,
+      "failures": 0,
+      "tokenUsage": {
+        "cached": 0,
+        "completion": 447,
+        "prompt": 6320,
+        "total": 6767
+      }
+    }
+  },
+  "config": {
+    "prompts": [
+      {
+        "raw": "({ vars, provider }) => [\n  {\n    role: \"system\",\n    content: prompt(vars)\n  },\n  {\n    role: \"user\",\n    content: vars.query\n  }\n]",
+        "label": "chat"
+      }
+    ],
+    "providers": [
+      "openai:gpt-4o"
+    ],
+    "tests": [
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "Show me all active tasks in the Inbox from last week"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2233078543"
+              ],
+              "statuses": [
+                "ACTIVE"
+              ],
+              "from": "2025-01-14",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      },
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "What are the completed tasks in the 'learn' project for this month?"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2341758902"
+              ],
+              "statuses": [
+                "DONE"
+              ],
+              "from": "2025-01-01",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      },
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "List all tasks across all projects"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2233078543",
+                "2341758902",
+                "2324942470",
+                "2324942463"
+              ],
+              "statuses": [
+                "ACTIVE",
+                "DONE"
+              ],
+              "from": "2025-01-14",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      },
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "List me everything I have left for thinking for today"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2324942470"
+              ],
+              "statuses": [
+                "ACTIVE"
+              ],
+              "from": "2025-01-21",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      },
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "What's in the 'think' project?"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2324942470"
+              ],
+              "statuses": [
+                "ACTIVE",
+                "DONE"
+              ],
+              "from": "2025-01-14",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      },
+      {
+        "vars": {
+          "projects": [
+            {
+              "uuid": "2233078543",
+              "name": "Inbox",
+              "description": "uncategorized tasks"
+            },
+            {
+              "uuid": "2341758902",
+              "name": "learn",
+              "description": "learning resources and study tasks"
+            },
+            {
+              "uuid": "2324942470",
+              "name": "think",
+              "description": "ideas and notes for potential tasks"
+            },
+            {
+              "uuid": "2324942463",
+              "name": "act",
+              "description": "actionable, concrete tasks"
+            }
+          ],
+          "query": "Show me active tasks in 'act' for the past quarter"
+        },
+        "assert": [
+          {
+            "type": "is-json",
+            "properties": {
+              "projects": [
+                "2324942463"
+              ],
+              "statuses": [
+                "ACTIVE"
+              ],
+              "from": "2024-10-23",
+              "to": "2025-01-21"
+            }
+          }
+        ]
+      }
+    ],
+    "outputPath": "./promptfoo_results.json"
+  },
+  "shareableUrl": null
+}

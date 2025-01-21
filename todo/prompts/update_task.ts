@@ -1,11 +1,27 @@
 import promptfoo, { type AssertionType } from "promptfoo";
-import { displayResultsAsTable, currentDateTime, formatDateTime } from "../utils";
+import {
+  displayResultsAsTable,
+  currentDateTime,
+  formatDateTime,
+} from "../utils";
 
 const projects = [
   { uuid: "2233078543", name: "Inbox", description: "Uncategorized tasks" },
-  { uuid: "2341758902", name: "Learn", description: "Learning resources and study tasks" },
-  { uuid: "2324942470", name: "Think", description: "Ideas and notes for potential tasks" },
-  { uuid: "2324942463", name: "Act", description: "Actionable, concrete tasks" },
+  {
+    uuid: "2341758902",
+    name: "Learn",
+    description: "Learning resources and study tasks",
+  },
+  {
+    uuid: "2324942470",
+    name: "Think",
+    description: "Ideas and notes for potential tasks",
+  },
+  {
+    uuid: "2324942463",
+    name: "Act",
+    description: "Actionable, concrete tasks",
+  },
 ];
 
 const tasks = [
@@ -21,21 +37,27 @@ const tasks = [
     name: "Read 'Introduction to AI'",
     description: "Finish reading the AI article",
     status: "ACTIVE",
-    due: formatDateTime(new Date(new Date(currentDateTime()).getTime() + 5 * 24 * 60 * 60 * 1000)), // 5 days from now
+    due: formatDateTime(
+      new Date(new Date(currentDateTime()).getTime() + 5 * 24 * 60 * 60 * 1000)
+    ), // 5 days from now
   },
   {
     uuid: "task-3",
     name: "Brainstorm project ideas",
     description: "Come up with new project concepts",
     status: "ACTIVE",
-    due: formatDateTime(new Date(new Date(currentDateTime()).getTime() + 10 * 24 * 60 * 60 * 1000)), // 10 days from now
+    due: formatDateTime(
+      new Date(new Date(currentDateTime()).getTime() + 10 * 24 * 60 * 60 * 1000)
+    ), // 10 days from now
   },
   {
     uuid: "task-4",
     name: "Call John",
     description: "Discuss project details",
     status: "ACTIVE",
-    due: formatDateTime(new Date(new Date(currentDateTime()).getTime() + 3 * 24 * 60 * 60 * 1000)), // 3 days from now
+    due: formatDateTime(
+      new Date(new Date(currentDateTime()).getTime() + 3 * 24 * 60 * 60 * 1000)
+    ), // 3 days from now
   },
 ];
 
@@ -47,8 +69,23 @@ Interpret conversations about updating existing tasks, then generate a valid JSO
 
 Note: 
 - The current time is ${currentDateTime()}.
-- This week ends on ${formatDateTime(new Date(new Date(currentDateTime()).setDate(new Date(currentDateTime()).getDate() + (7 - new Date(currentDateTime()).getDay()))))}.
-- This week started on ${formatDateTime(new Date(new Date(currentDateTime()).setDate(new Date(currentDateTime()).getDate() - new Date(currentDateTime()).getDay() + 1)))}.
+- This week ends on ${formatDateTime(
+    new Date(
+      new Date(currentDateTime()).setDate(
+        new Date(currentDateTime()).getDate() +
+          (7 - new Date(currentDateTime()).getDay())
+      )
+    )
+  )}.
+- This week started on ${formatDateTime(
+    new Date(
+      new Date(currentDateTime()).setDate(
+        new Date(currentDateTime()).getDate() -
+          new Date(currentDateTime()).getDay() +
+          1
+      )
+    )
+  )}.
 </prompt_objective>
 
 <prompt_rules>
@@ -87,10 +124,15 @@ Note: The 'diff' array should contain objects for each task that needs updating,
 <prompt_examples>
 Example 1: Updating a single task
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`).join("\n")}
+${projects
+  .map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`)
+  .join("\n")}
 </projects>
 <tasks>
-[{"id": "12345", "name": "Buy groceries", "description": "Get milk and bread", "status": "ACTIVE", "due": "${formatDateTime(new Date(currentDateTime()), false)}"}]
+[{"id": "12345", "name": "Buy groceries", "description": "Get milk and bread", "status": "ACTIVE", "due": "${formatDateTime(
+    new Date(currentDateTime()),
+    false
+  )}"}]
 </tasks>
 User: "Change the due date for buying groceries to tomorrow at 7 PM and add eggs to the description"
 
@@ -113,11 +155,19 @@ Your output:
 
 Example 2: Updating multiple tasks
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`).join("\n")}
+${projects
+  .map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`)
+  .join("\n")}
 </projects>
 <tasks>
-[{"id": "67890", "name": "Read article", "description": "Read 'Introduction to AI'", "status": "ACTIVE", "due": "${formatDateTime(new Date(currentDateTime()), false)}"},
- {"id": "54321", "name": "Brainstorm project ideas", "description": "Come up with new project concepts", "status": "ACTIVE", "due": "${formatDateTime(new Date(currentDateTime()), false)}"}]
+[{"id": "67890", "name": "Read article", "description": "Read 'Introduction to AI'", "status": "ACTIVE", "due": "${formatDateTime(
+    new Date(currentDateTime()),
+    false
+  )}"},
+ {"id": "54321", "name": "Brainstorm project ideas", "description": "Come up with new project concepts", "status": "ACTIVE", "due": "${formatDateTime(
+   new Date(currentDateTime()),
+   false
+ )}"}]
 </tasks>
 User: "I've finished reading the AI article. Mark it as done. Also, move the brainstorming task to the 'Act' project and set it for next Monday."
 
@@ -134,7 +184,9 @@ Your output:
       "project_id": "${projects.find((p: any) => p.name === "Act").uuid}",
       "due": "${(() => {
         const nextMonday = new Date(currentDateTime());
-        nextMonday.setDate(nextMonday.getDate() + ((1 + 7 - nextMonday.getDay()) % 7 || 7));
+        nextMonday.setDate(
+          nextMonday.getDate() + ((1 + 7 - nextMonday.getDay()) % 7 || 7)
+        );
         return formatDateTime(nextMonday, false);
       })()}"
     }
@@ -143,10 +195,15 @@ Your output:
 
 Example 3: Unclear update request
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`).join("\n")}
+${projects
+  .map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`)
+  .join("\n")}
 </projects>
 <tasks>
-[{"id": "98765", "name": "Call John", "description": "Discuss project details", "status": "ACTIVE", "due": "${formatDateTime(new Date(currentDateTime()), false)}"}]
+[{"id": "98765", "name": "Call John", "description": "Discuss project details", "status": "ACTIVE", "due": "${formatDateTime(
+    new Date(currentDateTime()),
+    false
+  )}"}]
 </tasks>
 User: "Update the task about the meeting"
 
@@ -158,10 +215,15 @@ Your output:
 
 Example 4: No changes needed
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`).join("\n")}
+${projects
+  .map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}"}`)
+  .join("\n")}
 </projects>
 <tasks>
-[{"id": "11111", "name": "Review weekly goals", "description": "Check progress on weekly objectives", "status": "ACTIVE", "due": "${formatDateTime(new Date(currentDateTime()), false)}"}]
+[{"id": "11111", "name": "Review weekly goals", "description": "Check progress on weekly objectives", "status": "ACTIVE", "due": "${formatDateTime(
+    new Date(currentDateTime()),
+    false
+  )}"}]
 </tasks>
 User: "Is my weekly review task still set for Sunday?"
 
@@ -175,33 +237,43 @@ Your output:
 ### Actual data ###
 
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`).join("\n")}
+${projects
+  .map(
+    (project: any) =>
+      `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`
+  )
+  .join("\n")}
 </projects>
 <tasks>
 ${tasks
-    .map(
-      (task: any) =>
-        `{"id": "${task.id}", "name": "${task.content}", "description": "${task.description}", "status": "${task.checked ? 'DONE' : 'ACTIVE'}", "due": "${task?.due?.date || 'n/a'}" project_id: "${task.project_id}"}`
-    )
-    .join("\n")}
+  .map(
+    (task: any) =>
+      `{"id": "${task.id}", "name": "${task.content}", "description": "${
+        task.description
+      }", "status": "${task.checked ? "DONE" : "ACTIVE"}", "due": "${
+        task?.due?.date || "n/a"
+      }" project_id: "${task.project_id}"}`
+  )
+  .join("\n")}
 </tasks>
 
 Remember, your sole function is to generate these JSON objects for task updates based on user input and the provided context. Do not engage in task management advice or direct responses to queries.`;
 };
 
 const dataset = [
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Postpone the 'Buy groceries' task by 3 days and add 'cheese' to the description",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "javascript" as AssertionType,
-          value: `
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Postpone the 'Buy groceries' task by 3 days and add 'cheese' to the description",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "javascript" as AssertionType,
+        value: `
           const response = JSON.parse(output);
           const diff = response.diff;
           const thinking = response._thinking;
@@ -247,21 +319,22 @@ const dataset = [
 
           return true;
           `,
-        },
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Move the 'Read Introduction to AI' task to the 'Learn' project and set its priority to high",
-      assert: [
-        {
-          type: "is-json",
-        },
-        {
-          type: "javascript",
-          value: `
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Move the 'Read Introduction to AI' task to the 'Learn' project and set its priority to high",
+    assert: [
+      {
+        type: "is-json",
+      },
+      {
+        type: "javascript",
+        value: `
           const response = JSON.parse(output);
           const diff = response.diff;
           const thinking = response._thinking;
@@ -304,21 +377,22 @@ const dataset = [
 
           return true;
           `,
-        },
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Change all tasks due this week to be due next Monday at 9 AM, except for 'Buy groceries'",
-      assert: [
-        {
-          type: "is-json",
-        },
-        {
-          type: "javascript",
-          value: `
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Change all tasks due this week to be due next Monday at 9 AM, except for 'Buy groceries'",
+    assert: [
+      {
+        type: "is-json",
+      },
+      {
+        type: "javascript",
+        value: `
           const response = JSON.parse(output);
           const diff = response.diff;
           const thinking = response._thinking;
@@ -368,21 +442,22 @@ const dataset = [
 
           return true;
           `,
-        },
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "For all tasks in the 'Learn' project, add a prefix '[STUDY]' to their names, set a reminder 2 hours before each due date, and extend their deadlines by 1 week",
-      assert: [
-        {
-          type: "is-json",
-        },
-        {
-          type: "javascript",
-          value: `
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "For all tasks in the 'Learn' project, add a prefix '[STUDY]' to their names, set a reminder 2 hours before each due date, and extend their deadlines by 1 week",
+    assert: [
+      {
+        type: "is-json",
+      },
+      {
+        type: "javascript",
+        value: `
           const response = JSON.parse(output);
           const diff = response.diff;
           const thinking = response._thinking;
@@ -430,22 +505,23 @@ const dataset = [
 
           return true;
           `,
-        },
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Create a new project 'Health' and move all tasks containing 'exercise' or 'workout' to it, then set their priorities to high",
-      assert: [
-        // As per the prompt, the assistant should only work with existing projects and cannot create new ones
-        {
-          type: "is-json",
-        },
-        {
-          type: "javascript",
-          value: `
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Create a new project 'Health' and move all tasks containing 'exercise' or 'workout' to it, then set their priorities to high",
+    assert: [
+      // As per the prompt, the assistant should only work with existing projects and cannot create new ones
+      {
+        type: "is-json",
+      },
+      {
+        type: "javascript",
+        value: `
           const response = JSON.parse(output);
           const diff = response.diff;
           const thinking = response._thinking;
@@ -463,10 +539,10 @@ const dataset = [
 
           return true;
           `,
-        },
-      ],
-    },
-  ];
+      },
+    ],
+  },
+];
 
 export const chat = ({ vars, provider }: any) => [
   {
@@ -484,10 +560,13 @@ export const runTest = async () => {
     {
       prompts: [chat],
       providers: ["openai:gpt-4o"],
-      tests: dataset.map(({ projects, tasks, currentDateTime, query, assert }) => ({
-        vars: { projects, tasks, currentDateTime, query },
-        assert,
-      })),
+      // @ts-ignore
+      tests: dataset.map(
+        ({ projects, tasks, currentDateTime, query, assert }) => ({
+          vars: { projects, tasks, currentDateTime, query },
+          assert,
+        })
+      ),
       outputPath: "./promptfoo_results.json",
     },
     {
@@ -500,6 +579,9 @@ export const runTest = async () => {
 };
 
 // Run the test if this file is executed directly
-if (require.main === module) {
+if (
+  typeof require !== "undefined" &&
+  require.main === require.cache[require.resolve(__filename)]
+) {
   runTest().catch(console.error);
 }

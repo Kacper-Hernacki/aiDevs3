@@ -2,24 +2,112 @@ import promptfoo, { type AssertionType } from "promptfoo";
 import { displayResultsAsTable, currentDateTime } from "../utils";
 
 const projects = [
-  { uuid: "2233078543", name: "Inbox", description: "Uncategorized pending items" },
-  { uuid: "2341758902", name: "Learn", description: "Knowledge acquisition, reading, courses, and skill development" },
-  { uuid: "2324942470", name: "Think", description: "Notes, idea generation and contemplation" },
-  { uuid: "2324942463", name: "Act", description: "Concrete tasks and actionable items" },
+  {
+    uuid: "2233078543",
+    name: "Inbox",
+    description: "Uncategorized pending items",
+  },
+  {
+    uuid: "2341758902",
+    name: "Learn",
+    description:
+      "Knowledge acquisition, reading, courses, and skill development",
+  },
+  {
+    uuid: "2324942470",
+    name: "Think",
+    description: "Notes, idea generation and contemplation",
+  },
+  {
+    uuid: "2324942463",
+    name: "Act",
+    description: "Concrete tasks and actionable items",
+  },
 ];
 
 const tasks = [
-    { uuid: "task-1", name: "Buy groceries", description: "Get milk and bread", status: "ACTIVE", due: currentDateTime() },
-    { uuid: "task-2", name: "Call John", description: "Reminder to discuss project", status: "ACTIVE" },
-    { uuid: "task-3", name: "Research market trends", description: "", status: "ACTIVE", due: new Date(new Date(currentDateTime()).getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
-    { uuid: "task-4", name: "Analyze competitor strategies", description: "", status: "ACTIVE" },
-    { uuid: "task-5", name: "Project presentation", description: "", status: "ACTIVE", due: new Date(new Date(currentDateTime()).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
-    { uuid: "task-6", name: "Study JavaScript", description: "", status: "ACTIVE" },
-    { uuid: "task-7", name: "Study TypeScript", description: "", status: "ACTIVE" },
-    { uuid: "task-8", name: "Reminder to call John", description: "", status: "ACTIVE", due: new Date(new Date(currentDateTime()).getTime() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
-    { uuid: "task-9", name: "Write annual report", description: "", status: "ACTIVE" },
-    { uuid: "task-10", name: "Brainstorming session", description: "", status: "ACTIVE", due: new Date(new Date(currentDateTime()).getTime() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
-  ];
+  {
+    uuid: "task-1",
+    name: "Buy groceries",
+    description: "Get milk and bread",
+    status: "ACTIVE",
+    due: currentDateTime(),
+  },
+  {
+    uuid: "task-2",
+    name: "Call John",
+    description: "Reminder to discuss project",
+    status: "ACTIVE",
+  },
+  {
+    uuid: "task-3",
+    name: "Research market trends",
+    description: "",
+    status: "ACTIVE",
+    due: new Date(
+      new Date(currentDateTime()).getTime() + 3 * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0],
+  },
+  {
+    uuid: "task-4",
+    name: "Analyze competitor strategies",
+    description: "",
+    status: "ACTIVE",
+  },
+  {
+    uuid: "task-5",
+    name: "Project presentation",
+    description: "",
+    status: "ACTIVE",
+    due: new Date(
+      new Date(currentDateTime()).getTime() + 7 * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0],
+  },
+  {
+    uuid: "task-6",
+    name: "Study JavaScript",
+    description: "",
+    status: "ACTIVE",
+  },
+  {
+    uuid: "task-7",
+    name: "Study TypeScript",
+    description: "",
+    status: "ACTIVE",
+  },
+  {
+    uuid: "task-8",
+    name: "Reminder to call John",
+    description: "",
+    status: "ACTIVE",
+    due: new Date(
+      new Date(currentDateTime()).getTime() + 2 * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0],
+  },
+  {
+    uuid: "task-9",
+    name: "Write annual report",
+    description: "",
+    status: "ACTIVE",
+  },
+  {
+    uuid: "task-10",
+    name: "Brainstorming session",
+    description: "",
+    status: "ACTIVE",
+    due: new Date(
+      new Date(currentDateTime()).getTime() + 5 * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0],
+  },
+];
 
 export const prompt = ({ projects, tasks }: any) => {
   return `From now on, you will function as a Task Query Analyzer and Splitter, focusing exclusively on the user's most recent message. Your primary role is to interpret the latest user request about tasks and divide it into comprehensive subqueries for different actions, including splitting and merging tasks, as well as listing and retrieving task details.
@@ -123,153 +211,179 @@ Output:
 </examples>
 
 <projects>
-${projects.map((project: any) => `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`).join("\n")}
+${projects
+  .map(
+    (project: any) =>
+      `{"id": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`
+  )
+  .join("\n")}
 </projects>
 
 <tasks>
-${tasks.map((task: any) => `{"id": "${task.uuid}", "name": "${task.name}", "description": "${task.description}", "project_id": "${task.project_uuid}", "status": "${task.status}"}`).join("\n")}
+${tasks
+  .map(
+    (task: any) =>
+      `{"id": "${task.uuid}", "name": "${task.name}", "description": "${task.description}", "project_id": "${task.project_uuid}", "status": "${task.status}"}`
+  )
+  .join("\n")}
 </tasks>
 
 Remember, your sole function is to analyze the user's latest input and categorize task-related actions into the specified JSON structure. Do not engage in task management advice or direct responses to queries. Focus only on the most recent message, disregarding any previous context or commands.`;
 };
 
 const dataset = [
-    {
-        projects,
-        tasks,
-        currentDateTime: currentDateTime(),
-        query: "Add a task to buy groceries tomorrow",
-        assert: [
-          {
-            type: "is-json" as AssertionType,
-          },
-          {
-            type: "llm-rubric" as AssertionType,
-            value: "The '_thinking' field mentions 'buy groceries'. The 'add' field includes a task to buy groceries with the due date set to tomorrow. The 'update', 'delete', 'list', and 'get' fields are null."
-          }
-        ],
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query: "Add a task to buy groceries tomorrow",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
       },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Create tasks for weekly chores: laundry on Monday, cleaning on Wednesday, and grocery shopping on Saturday",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions 'weekly chores'. The 'add' field includes tasks for laundry, cleaning, and grocery shopping with their respective days. The 'update', 'delete', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Change the due date of my project presentation to next Friday",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions 'project presentation' and 'next Friday'. The 'update' field includes changing the due date of the project presentation task to next Friday. The 'add', 'delete', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Update all my study tasks to have high priority and set their due dates to the end of this month",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions 'study tasks'. The 'update' field includes updating the priority to high and setting due dates for all study tasks. The 'add', 'delete', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Add a new task to prepare for the team meeting and remove the old brainstorming session from last week",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions both 'prepare for the team meeting' and 'remove the old brainstorming session'. The 'add' field includes a new task for team meeting preparation. The 'delete' field includes removing the brainstorming session task. The 'update', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Mark the 'buy groceries' task as complete and delete the reminder to call John",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions marking 'buy groceries' as complete and deleting the reminder to call John. The 'update' field includes marking the 'buy groceries' task as complete. The 'delete' field includes removing the reminder to call John. The 'add', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Combine my 'research market trends' and 'analyze competitor strategies' tasks into a single 'market analysis' task",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions combining tasks into a 'market analysis' task. The 'add' field includes creating a new 'market analysis' task. The 'delete' field includes removing both 'research market trends' and 'analyze competitor strategies' tasks. The 'update', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Split the 'write annual report' task into subtasks: gather data, draft main sections, and create visuals",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions splitting the 'write annual report' task. The 'add' field includes creating subtasks for gathering data, drafting main sections, and creating visuals. The 'delete' field includes removing the original 'write annual report' task. The 'update', 'list', and 'get' fields are null."
-        }
-      ],
-    },
-    {
-      projects,
-      tasks,
-      currentDateTime: currentDateTime(),
-      query: "Add a new project 'Home Renovation', create tasks for planning, budgeting, and hiring contractors, then move all existing house-related tasks to this new project",
-      assert: [
-        {
-          type: "is-json" as AssertionType,
-        },
-        {
-          type: "llm-rubric" as AssertionType,
-          value: "The '_thinking' field mentions all required actions and details. The 'add' field includes tasks for planning, budgeting, and hiring contractors for the new 'Home Renovation' project. The 'update', 'delete', 'list', and 'get' fields are null."
-        }
-      ],
-    }
-  ];
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions 'buy groceries'. The 'add' field includes a task to buy groceries with the due date set to tomorrow. The 'update', 'delete', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Create tasks for weekly chores: laundry on Monday, cleaning on Wednesday, and grocery shopping on Saturday",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions 'weekly chores'. The 'add' field includes tasks for laundry, cleaning, and grocery shopping with their respective days. The 'update', 'delete', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query: "Change the due date of my project presentation to next Friday",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions 'project presentation' and 'next Friday'. The 'update' field includes changing the due date of the project presentation task to next Friday. The 'add', 'delete', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Update all my study tasks to have high priority and set their due dates to the end of this month",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions 'study tasks'. The 'update' field includes updating the priority to high and setting due dates for all study tasks. The 'add', 'delete', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Add a new task to prepare for the team meeting and remove the old brainstorming session from last week",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions both 'prepare for the team meeting' and 'remove the old brainstorming session'. The 'add' field includes a new task for team meeting preparation. The 'delete' field includes removing the brainstorming session task. The 'update', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Mark the 'buy groceries' task as complete and delete the reminder to call John",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions marking 'buy groceries' as complete and deleting the reminder to call John. The 'update' field includes marking the 'buy groceries' task as complete. The 'delete' field includes removing the reminder to call John. The 'add', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Combine my 'research market trends' and 'analyze competitor strategies' tasks into a single 'market analysis' task",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions combining tasks into a 'market analysis' task. The 'add' field includes creating a new 'market analysis' task. The 'delete' field includes removing both 'research market trends' and 'analyze competitor strategies' tasks. The 'update', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Split the 'write annual report' task into subtasks: gather data, draft main sections, and create visuals",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions splitting the 'write annual report' task. The 'add' field includes creating subtasks for gathering data, drafting main sections, and creating visuals. The 'delete' field includes removing the original 'write annual report' task. The 'update', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+  {
+    projects,
+    tasks,
+    currentDateTime: currentDateTime(),
+    query:
+      "Add a new project 'Home Renovation', create tasks for planning, budgeting, and hiring contractors, then move all existing house-related tasks to this new project",
+    assert: [
+      {
+        type: "is-json" as AssertionType,
+      },
+      {
+        type: "llm-rubric" as AssertionType,
+        value:
+          "The '_thinking' field mentions all required actions and details. The 'add' field includes tasks for planning, budgeting, and hiring contractors for the new 'Home Renovation' project. The 'update', 'delete', 'list', and 'get' fields are null.",
+      },
+    ],
+  },
+];
 
 export const chat = ({ vars, provider }: any) => [
   {
@@ -287,10 +401,12 @@ export const runTest = async () => {
     {
       prompts: [chat],
       providers: ["openai:gpt-4o"],
-      tests: dataset.map(({ projects, tasks, currentDateTime, query, assert }) => ({
-        vars: { projects, tasks, currentDateTime, query },
-        assert,
-      })),
+      tests: dataset.map(
+        ({ projects, tasks, currentDateTime, query, assert }) => ({
+          vars: { projects, tasks, currentDateTime, query },
+          assert,
+        })
+      ),
       outputPath: "./promptfoo_results.json",
     },
     {
@@ -303,6 +419,9 @@ export const runTest = async () => {
 };
 
 // Run the test if this file is executed directly
-if (require.main === module) {
+if (
+  typeof require !== "undefined" &&
+  require.main === require.cache[require.resolve(__filename)]
+) {
   runTest().catch(console.error);
 }

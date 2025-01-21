@@ -2,17 +2,37 @@ import promptfoo, { type AssertionType } from "promptfoo";
 import { currentDateTime, displayResultsAsTable } from "../utils";
 
 const projects = [
-    {"uuid": "2233078543", "name": "Inbox", "description": "uncategorized tasks"},
-    {"uuid": "2341758902", "name": "learn", "description": "learning resources and study tasks"},
-    {"uuid": "2324942470", "name": "think", "description": "ideas and notes for potential tasks"},
-    {"uuid": "2324942463", "name": "act", "description": "actionable, concrete tasks"}
+  { uuid: "2233078543", name: "Inbox", description: "uncategorized tasks" },
+  {
+    uuid: "2341758902",
+    name: "learn",
+    description: "learning resources and study tasks",
+  },
+  {
+    uuid: "2324942470",
+    name: "think",
+    description: "ideas and notes for potential tasks",
+  },
+  {
+    uuid: "2324942463",
+    name: "act",
+    description: "actionable, concrete tasks",
+  },
 ];
 
 export const prompt = ({ projects }: any) => {
   const currentDate = new Date();
   const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  const firstDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+  const lastDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
 
   return `
   
@@ -42,7 +62,12 @@ Context: The current time is ${currentDateTime()}. ALWAYS use it to set the date
 - Use the current time to set the date range, not the one from the examples
 - Include a "_thinking" field to explain your interpretation process
 - Use only these project categories:
-${projects.map((project: any) => `    {"uuid": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`).join(',\n')}
+${projects
+  .map(
+    (project: any) =>
+      `    {"uuid": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`
+  )
+  .join(",\n")}
 - Use "ACTIVE" or "DONE" for task statuses
 - Use "YYYY-MM-DD HH:mm" for date ranges (00:00 for start, 23:59 for end unless otherwise specified)
 - Default to the past week for vague time references
@@ -70,8 +95,12 @@ User: "What's in my Inbox for this week?"
 Your output:
 {
   "_thinking": "Checking Inbox tasks for this week.",
-  "from": "${currentDate.toISOString().split('T')[0]} 00:00",
-  "to": "${new Date(currentDate.getTime() + 6 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]} 23:59",
+  "from": "${currentDate.toISOString().split("T")[0]} 00:00",
+  "to": "${
+    new Date(currentDate.getTime() + 6 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0]
+  } 23:59",
   "projects": ["2233078543"],
   "statuses": ["ACTIVE", "DONE"]
 }
@@ -82,8 +111,8 @@ User: "Show me what I need to learn and do this month."
 Your output:
 {
   "_thinking": "Viewing 'learn' and 'act' items for this month.",
-  "from": "${firstDayOfMonth.toISOString().split('T')[0]} 00:00",
-  "to": "${lastDayOfMonth.toISOString().split('T')[0]} 23:59",
+  "from": "${firstDayOfMonth.toISOString().split("T")[0]} 00:00",
+  "to": "${lastDayOfMonth.toISOString().split("T")[0]} 23:59",
   "projects": ["2341758902", "2324942463"],
   "statuses": ["ACTIVE"]
 }
@@ -94,8 +123,8 @@ User: "Anything I should be working on?"
 Your output:
 {
   "_thinking": "Assuming current actionable tasks from past week.",
-  "from": "${oneWeekAgo.toISOString().split('T')[0]} 00:00",
-  "to": "${currentDate.toISOString().split('T')[0]} 23:59",
+  "from": "${oneWeekAgo.toISOString().split("T")[0]} 00:00",
+  "to": "${currentDate.toISOString().split("T")[0]} 23:59",
   "projects": ["2324942463", "2324942470", "2233078543"],
   "statuses": ["ACTIVE"]
 }
@@ -106,44 +135,47 @@ User: "Tell me a joke about task management."
 Your output:
 {
   "_thinking": "Unrelated request. Providing default query.",
-  "from": "${oneWeekAgo.toISOString().split('T')[0]} 00:00",
-  "to": "${currentDate.toISOString().split('T')[0]} 23:59",
+  "from": "${oneWeekAgo.toISOString().split("T")[0]} 00:00",
+  "to": "${currentDate.toISOString().split("T")[0]} 23:59",
   "projects": ["2233078543", "2341758902", "2324942470", "2324942463"],
   "statuses": ["ACTIVE", "DONE"]
 }
 </prompt_examples>
 
 Remember, your sole function is to generate these JSON queries based on task-related conversations. Do not engage in task management advice or direct responses to queries.`;
-}
+};
 
 const dataset = [
   {
     projects,
     query: "Show me all active tasks in the Inbox from last week",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2233078543'],
-          'statuses': ['ACTIVE'],
-          'from': new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2233078543"],
+          statuses: ["ACTIVE"],
+          from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
   {
     projects,
-    query: "What are the completed tasks in the 'learn' project for this month?",
+    query:
+      "What are the completed tasks in the 'learn' project for this month?",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2341758902'],
-          'statuses': ['DONE'],
-          'from': new Date(new Date().setDate(1)).toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2341758902"],
+          statuses: ["DONE"],
+          from: new Date(new Date().setDate(1)).toISOString().split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
@@ -151,14 +183,16 @@ const dataset = [
     projects,
     query: "List all tasks across all projects",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2233078543', '2341758902', '2324942470', '2324942463'],
-          'statuses': ['ACTIVE', 'DONE'],
-          'from': new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2233078543", "2341758902", "2324942470", "2324942463"],
+          statuses: ["ACTIVE", "DONE"],
+          from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
@@ -166,14 +200,14 @@ const dataset = [
     projects,
     query: "List me everything I have left for thinking for today",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2324942470'],
-          'statuses': ['ACTIVE'],
-          'from': new Date().toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2324942470"],
+          statuses: ["ACTIVE"],
+          from: new Date().toISOString().split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
@@ -181,14 +215,16 @@ const dataset = [
     projects,
     query: "What's in the 'think' project?",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2324942470'],
-          'statuses': ['ACTIVE', 'DONE'],
-          'from': new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2324942470"],
+          statuses: ["ACTIVE", "DONE"],
+          from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
@@ -196,28 +232,30 @@ const dataset = [
     projects,
     query: "Show me active tasks in 'act' for the past quarter",
     assert: [
-      { 
+      {
         type: "is-json" as AssertionType,
         properties: {
-          'projects': ['2324942463'],
-          'statuses': ['ACTIVE'],
-          'from': new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          'to': new Date().toISOString().split('T')[0]
-        }
+          projects: ["2324942463"],
+          statuses: ["ACTIVE"],
+          from: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          to: new Date().toISOString().split("T")[0],
+        },
       },
     ],
   },
 ];
 
-export const chat = ({vars, provider}: any) => [
-    {
-      role: "system",
-      content: prompt(vars)
-    },
-    {
-      role: "user",
-      content: vars.query
-    }
+export const chat = ({ vars, provider }: any) => [
+  {
+    role: "system",
+    content: prompt(vars),
+  },
+  {
+    role: "user",
+    content: vars.query,
+  },
 ];
 
 export const runTest = async () => {
@@ -242,6 +280,6 @@ export const runTest = async () => {
 };
 
 // Run the test if this file is executed directly
-if (require.main === module) {
+if (import.meta.main) {
   runTest().catch(console.error);
 }

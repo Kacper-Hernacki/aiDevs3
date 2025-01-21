@@ -2,21 +2,39 @@ import promptfoo, { type AssertionType } from "promptfoo";
 import { displayResultsAsTable, currentDateTime } from "../utils";
 
 const projects = [
-  { uuid: "2233078543", name: "Inbox", description: "Uncategorized pending items" },
-  { uuid: "2341758902", name: "Learn", description: "Knowledge acquisition, reading, watching courses, and skill development" },
-  { uuid: "2324942470", name: "Think", description: "Notes, idea generation and contemplation" },
-  { uuid: "2324942463", name: "Act", description: "Concrete tasks and actionable items such as creating content, coding, writing, etc." },
+  {
+    uuid: "2233078543",
+    name: "Inbox",
+    description: "Uncategorized pending items",
+  },
+  {
+    uuid: "2341758902",
+    name: "Learn",
+    description:
+      "Knowledge acquisition, reading, watching courses, and skill development",
+  },
+  {
+    uuid: "2324942470",
+    name: "Think",
+    description: "Notes, idea generation and contemplation",
+  },
+  {
+    uuid: "2324942463",
+    name: "Act",
+    description:
+      "Concrete tasks and actionable items such as creating content, coding, writing, etc.",
+  },
 ];
 
 const formatDateTime = (date: Date, includeTime: boolean = true): string => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   const dateString = `${year}-${month}-${day}`;
 
   if (includeTime) {
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${dateString} ${hours}:${minutes}`;
   }
 
@@ -24,7 +42,6 @@ const formatDateTime = (date: Date, includeTime: boolean = true): string => {
 };
 
 export const prompt = ({ projects }: any) => {
-
   return `From now on, you will act as a Personal Task Assistant specialized in task creation. Your primary function is to interpret user requests about adding new tasks and generate a structured JSON object for our task management API. Here are your guidelines:
 
 <prompt_objective>
@@ -78,7 +95,12 @@ Note: The "description" and "due" fields are optional and should be omitted if n
 </output_format>
 
 <projects>
-${projects.map((project: any) => `{"uuid": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`).join(",\n")}
+${projects
+  .map(
+    (project: any) =>
+      `{"uuid": "${project.uuid}", "name": "${project.name}", "description": "${project.description}"}`
+  )
+  .join(",\n")}
 </projects>
 
 <prompt_examples>
@@ -134,7 +156,9 @@ Your output:
       "description": "Scheduled team meeting for next Tuesday",
       "due": "${(() => {
         const nextTuesday = new Date(currentDateTime());
-        nextTuesday.setDate(nextTuesday.getDate() + ((2 - nextTuesday.getDay() + 7) % 7 || 7) + 7);
+        nextTuesday.setDate(
+          nextTuesday.getDate() + ((2 - nextTuesday.getDay() + 7) % 7 || 7) + 7
+        );
         return formatDateTime(nextTuesday, false);
       })()}"
     },
@@ -144,7 +168,9 @@ Your output:
       "description": "Scheduled team meeting for next Friday",
       "due": "${(() => {
         const nextFriday = new Date(currentDateTime());
-        nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7) + 7);
+        nextFriday.setDate(
+          nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7) + 7
+        );
         return formatDateTime(nextFriday, false);
       })()}"
     }
@@ -164,7 +190,11 @@ Your output:
       "description": "Scheduled dentist appointment",
       "due": "${(() => {
         const nextWednesday = new Date(currentDateTime());
-        nextWednesday.setDate(nextWednesday.getDate() + ((3 - nextWednesday.getDay() + 7) % 7 || 7) + 7);
+        nextWednesday.setDate(
+          nextWednesday.getDate() +
+            ((3 - nextWednesday.getDay() + 7) % 7 || 7) +
+            7
+        );
         nextWednesday.setHours(14, 0, 0, 0);
         return formatDateTime(nextWednesday);
       })()}"
@@ -175,7 +205,9 @@ Your output:
       "description": "Buy groceries this weekend",
       "due": "${(() => {
         const thisWeekend = new Date(currentDateTime());
-        thisWeekend.setDate(thisWeekend.getDate() + (6 - thisWeekend.getDay() + 7) % 7);
+        thisWeekend.setDate(
+          thisWeekend.getDate() + ((6 - thisWeekend.getDay() + 7) % 7)
+        );
         return formatDateTime(thisWeekend, false);
       })()}"
     }
@@ -191,7 +223,8 @@ const dataset = [
   {
     projects,
     currentDateTime: currentDateTime(),
-    query: "Add two tasks: buy groceries for dinner tonight, and read chapter 3 of the AI textbook by next Monday",
+    query:
+      "Add two tasks: buy groceries for dinner tonight, and read chapter 3 of the AI textbook by next Monday",
     assert: [
       {
         type: "is-json" as AssertionType,
@@ -235,14 +268,15 @@ const dataset = [
         }
         
         return true;
-        `
-      }
+        `,
+      },
     ],
   },
   {
     projects,
     currentDateTime: currentDateTime(),
-    query: "Create three tasks: call mom this weekend, brainstorm new project ideas by next Friday, and schedule a dentist appointment for next month",
+    query:
+      "Create three tasks: call mom this weekend, brainstorm new project ideas by next Friday, and schedule a dentist appointment for next month",
     assert: [
       {
         type: "is-json" as AssertionType,
@@ -284,14 +318,15 @@ const dataset = [
         }
 
         return true;
-        `
-      }
+        `,
+      },
     ],
   },
   {
     projects,
     currentDateTime: currentDateTime(),
-    query: "Add a task to review the quarterly report by end of this month, and another to prepare for the team meeting next Tuesday at 2 PM",
+    query:
+      "Add a task to review the quarterly report by end of this month, and another to prepare for the team meeting next Tuesday at 2 PM",
     assert: [
       {
         type: "is-json" as AssertionType,
@@ -337,14 +372,15 @@ const dataset = [
         }
 
         return true;
-        `
-      }
+        `,
+      },
     ],
   },
   {
     projects,
     currentDateTime: currentDateTime(),
-    query: "Create tasks for a weekly routine: exercise on Mondays and Thursdays at 7 AM, grocery shopping on Saturdays at 10 AM, and review weekly goals every Sunday at 8 PM",
+    query:
+      "Create tasks for a weekly routine: exercise on Mondays and Thursdays at 7 AM, grocery shopping on Saturdays at 10 AM, and review weekly goals every Sunday at 8 PM",
     assert: [
       {
         type: "is-json" as AssertionType,
@@ -380,8 +416,8 @@ const dataset = [
         }
 
         return true;
-        `
-      }
+        `,
+      },
     ],
   },
 ];
@@ -418,6 +454,9 @@ export const runTest = async () => {
 };
 
 // Run the test if this file is executed directly
-if (require.main === module) {
+if (
+  typeof require !== "undefined" &&
+  require.main === require.cache[require.resolve(__filename)]
+) {
   runTest().catch(console.error);
 }
